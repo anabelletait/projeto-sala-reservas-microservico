@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Cadastro de Usuário - Sistema de Reservas</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+        <style>
+            :root {
+                --primary-color: #2c3e50;
+                --secondary-color: #3498db;
+                --accent-color: #e74c3c;
+            }
+            
+            body {
+                background-color: #f8f9fa;
+                font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            }
+            
+            .navbar {
+                background-color: var(--primary-color);
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            
+            .navbar-brand {
+                color: white !important;
+                font-weight: 600;
+            }
+            
+            .nav-link {
+                color: rgba(255,255,255,0.8) !important;
+                transition: all 0.3s ease;
+            }
+            
+            .nav-link:hover {
+                color: white !important;
+                transform: translateY(-1px);
+            }
+            
+            .form-container {
+                background: white;
+                border-radius: 15px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                padding: 2rem;
+                margin-top: 2rem;
+            }
+            
+            .form-title {
+                color: var(--primary-color);
+                font-weight: 600;
+                margin-bottom: 1.5rem;
+                padding-bottom: 1rem;
+                border-bottom: 2px solid var(--secondary-color);
+            }
+            
+            .form-label {
+                font-weight: 500;
+                color: var(--primary-color);
+            }
+            
+            .form-control {
+                border-radius: 8px;
+                border: 1px solid #dee2e6;
+                padding: 0.75rem;
+                transition: all 0.3s ease;
+            }
+            
+            .form-control:focus {
+                border-color: var(--secondary-color);
+                box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+            }
+            
+            .btn-primary {
+                background-color: var(--secondary-color);
+                border: none;
+                padding: 0.75rem 2rem;
+                font-weight: 500;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+            }
+            
+            .btn-primary:hover {
+                background-color: #2980b9;
+                transform: translateY(-2px);
+            }
+            
+            .form-section {
+                margin-bottom: 2rem;
+                padding: 1.5rem;
+                background-color: #f8f9fa;
+                border-radius: 10px;
+            }
+            
+            .form-section-title {
+                color: var(--primary-color);
+                font-size: 1.2rem;
+                margin-bottom: 1rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            .toast-container {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 1000;
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">
+                    <i class="bi bi-calendar-check me-2"></i>
+                    Sistema de Reservas
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="form1.html">Cadastro</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="list1.html">Listagem</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div class="form-container">
+                <h2 class="form-title">Cadastro de Usuário</h2>
+                <form id="form1">
+                    <div class="form-section">
+                        <h3 class="form-section-title">
+                            <i class="bi bi-person-circle"></i>
+                            Informações Pessoais
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="nome" class="form-label">Nome Completo</label>
+                                <input type="text" class="form-control" id="nome" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="cpf" class="form-label">CPF</label>
+                                <input type="text" class="form-control" id="cpf" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="dataNascimento" class="form-label">Data de Nascimento</label>
+                                <input type="date" class="form-control" id="dataNascimento" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="form-section-title">
+                            <i class="bi bi-shield-lock"></i>
+                            Segurança
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="senha" class="form-label">Senha</label>
+                                <input type="password" class="form-control" id="senha" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="telefone" class="form-label">Telefone</label>
+                                <input type="text" class="form-control" id="telefone" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="form-section-title">
+                            <i class="bi bi-geo-alt"></i>
+                            Endereço
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="cep" class="form-label">CEP</label>
+                                <input type="text" class="form-control" id="cep" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="cidade" class="form-label">Cidade</label>
+                                <input type="text" class="form-control" id="cidade" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label for="rua" class="form-label">Rua</label>
+                                <input type="text" class="form-control" id="rua" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="numero" class="form-label">Número</label>
+                                <input type="text" class="form-control" id="numero" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-2"></i>
+                            Cadastrar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="toast-container"></div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            function showToast(message, type = 'success') {
+                const toastContainer = document.querySelector('.toast-container');
+                const toast = document.createElement('div');
+                toast.className = `toast align-items-center text-white bg-${type} border-0`;
+                toast.setAttribute('role', 'alert');
+                toast.setAttribute('aria-live', 'assertive');
+                toast.setAttribute('aria-atomic', 'true');
+                
+                toast.innerHTML = `
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                `;
+                
+                toastContainer.appendChild(toast);
+                const bsToast = new bootstrap.Toast(toast);
+                bsToast.show();
+                
+                toast.addEventListener('hidden.bs.toast', () => {
+                    toast.remove();
+                });
+            }
+
+            document.getElementById("form1").addEventListener("submit", function(event) {
+                event.preventDefault();
+
+                // Remove formatação do CPF
+                const cpf = document.getElementById("cpf").value.replace(/\D/g, '');
+                
+                // Formata a data para o padrão esperado pelo backend (YYYY-MM-DD)
+                const dataNascimento = document.getElementById("dataNascimento").value;
+
+                const data = {
+                    nome: document.getElementById("nome").value,
+                    email: document.getElementById("email").value,
+                    senha: document.getElementById("senha").value,
+                    telefone: document.getElementById("telefone").value,
+                    rua: document.getElementById("rua").value,
+                    numero: document.getElementById("numero").value,
+                    cidade: document.getElementById("cidade").value,
+                    cep: document.getElementById("cep").value,
+                    cpf: cpf,
+                    dataNascimento: dataNascimento
+                };
+
+                fetch("http://localhost:8080/usuarios/salvar", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(async response => {
+                    if (!response.ok) {
+                        const text = await response.text();
+                        showToast(`Erro ao cadastrar: ${text}`, 'danger');
+                        throw new Error(text);
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    showToast('Usuário cadastrado com sucesso!');
+                    this.reset();
+                })
+                .catch(error => {
+                    console.error("Erro ao enviar o formulário:", error);
+                });
+            });
+
+            // Máscara para CPF
+            document.getElementById('cpf').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length <= 11) {
+                    value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+                    e.target.value = value;
+                }
+            });
+
+            // Máscara para telefone
+            document.getElementById('telefone').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length <= 11) {
+                    value = value.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+                    e.target.value = value;
+                }
+            });
+
+            // Máscara para CEP
+            document.getElementById('cep').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length <= 8) {
+                    value = value.replace(/(\d{5})(\d{3})/, "$1-$2");
+                    e.target.value = value;
+                }
+            });
+        </script>
+    </body>
+</html>

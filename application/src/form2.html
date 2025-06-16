@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Cadastro de Sala - Sistema de Reservas</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+        <style>
+            :root {
+                --primary-color: #2c3e50;
+                --secondary-color: #3498db;
+                --accent-color: #e74c3c;
+            }
+            
+            body {
+                background-color: #f8f9fa;
+                font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            }
+            
+            .navbar {
+                background-color: var(--primary-color);
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            
+            .navbar-brand {
+                color: white !important;
+                font-weight: 600;
+            }
+            
+            .nav-link {
+                color: rgba(255,255,255,0.8) !important;
+                transition: all 0.3s ease;
+            }
+            
+            .nav-link:hover {
+                color: white !important;
+                transform: translateY(-1px);
+            }
+            
+            .form-container {
+                background: white;
+                border-radius: 15px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                padding: 2rem;
+                margin-top: 2rem;
+            }
+            
+            .form-title {
+                color: var(--primary-color);
+                font-weight: 600;
+                margin-bottom: 1.5rem;
+                padding-bottom: 1rem;
+                border-bottom: 2px solid var(--secondary-color);
+            }
+            
+            .form-label {
+                font-weight: 500;
+                color: var(--primary-color);
+            }
+            
+            .form-control {
+                border-radius: 8px;
+                border: 1px solid #dee2e6;
+                padding: 0.75rem;
+                transition: all 0.3s ease;
+            }
+            
+            .form-control:focus {
+                border-color: var(--secondary-color);
+                box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+            }
+            
+            .btn-primary {
+                background-color: var(--secondary-color);
+                border: none;
+                padding: 0.75rem 2rem;
+                font-weight: 500;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+            }
+            
+            .btn-primary:hover {
+                background-color: #2980b9;
+                transform: translateY(-2px);
+            }
+            
+            .form-section {
+                margin-bottom: 2rem;
+                padding: 1.5rem;
+                background-color: #f8f9fa;
+                border-radius: 10px;
+            }
+            
+            .form-section-title {
+                color: var(--primary-color);
+                font-size: 1.2rem;
+                margin-bottom: 1rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            .toast-container {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 1000;
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">
+                    <i class="bi bi-calendar-check me-2"></i>
+                    Sistema de Reservas
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="form1.html">Cadastro de Usuário</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="form2.html">Cadastro de Sala</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="list2.html">Listagem de Salas</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div class="form-container">
+                <h2 class="form-title">
+                    <i class="bi bi-door-open me-2"></i>
+                    Cadastro de Sala
+                </h2>
+                <form id="form2">
+                    <div class="form-section">
+                        <h3 class="form-section-title">
+                            <i class="bi bi-info-circle"></i>
+                            Informações da Sala
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label for="nome" class="form-label">Nome da Sala</label>
+                                <input type="text" class="form-control" id="nome" required 
+                                       placeholder="Ex: Sala de Reuniões 1">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="capacidade" class="form-label">Capacidade</label>
+                                <input type="number" class="form-control" id="capacidade" required 
+                                       min="1" placeholder="Ex: 10">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-2"></i>
+                            Cadastrar Sala
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="toast-container"></div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            function showToast(message, type = 'success') {
+                const toastContainer = document.querySelector('.toast-container');
+                const toast = document.createElement('div');
+                toast.className = `toast align-items-center text-white bg-${type} border-0`;
+                toast.setAttribute('role', 'alert');
+                toast.setAttribute('aria-live', 'assertive');
+                toast.setAttribute('aria-atomic', 'true');
+                
+                toast.innerHTML = `
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                `;
+                
+                toastContainer.appendChild(toast);
+                const bsToast = new bootstrap.Toast(toast);
+                bsToast.show();
+                
+                toast.addEventListener('hidden.bs.toast', () => {
+                    toast.remove();
+                });
+            }
+
+            document.getElementById("form2").addEventListener("submit", function(event) {
+                event.preventDefault();
+
+                const data = {
+                    nome: document.getElementById("nome").value,
+                    capacidade: document.getElementById("capacidade").value
+                };
+
+                fetch("http://localhost:8080/salas/salvar", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(async response => {
+                    if (!response.ok) {
+                        const text = await response.text();
+                        showToast(`Erro ao cadastrar sala: ${text}`, 'danger');
+                        throw new Error(text);
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    showToast('Sala cadastrada com sucesso!');
+                    this.reset();
+                })
+                .catch(error => {
+                    console.error("Erro ao enviar o formulário:", error);
+                });
+            });
+        </script>
+    </body>
+</html>

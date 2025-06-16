@@ -1,0 +1,40 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      routes:
+        - id: usuario-service
+          uri: http://usuario:8082
+          predicates:
+            - Path=/usuarios/**
+        - id: sala-service
+          uri: http://sala:8082
+          predicates:
+            - Path=/salas/**
+        - id: reserva-service
+          uri: http://reserva:8082
+          predicates:
+            - Path=/reservas/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOriginPatterns:
+              - 'http://localhost:3000'
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - '*'
+            allowCredentials: true
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest

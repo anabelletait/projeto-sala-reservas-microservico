@@ -1,0 +1,187 @@
+services:
+  usuario:
+    restart: always
+    container_name: usuario
+    build:
+      context: ./usuario
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://dbUsuario:5432/usuariodb
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=admin
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.PostgreSQLDialect
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_SHOW_SQL=true
+      - SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL=true
+      - SERVER_PORT=8082
+    ports:
+      - '8083:8082'
+    depends_on:
+      - dbUsuario
+    networks:
+      - netUsuario
+      - netApiGateway
+  dbUsuario:
+    image: postgres:latest
+    restart: always
+    container_name: dbUsuario
+    environment:
+      POSTGRES_DB: usuariodb
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - '5433:5432'
+    networks:
+      - netUsuario
+
+  reserva:
+    restart: always
+    container_name: reserva
+    build:
+      context: ./reserva
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://dbReserva:5432/reservadb
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=admin
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.PostgreSQLDialect
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_SHOW_SQL=true
+      - SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL=true
+      - SERVER_PORT=8082
+    ports:
+      - '8084:8082'
+    depends_on:
+      dbReserva:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - netReservas
+      - netApiGateway
+
+  dbReserva:
+    image: postgres:latest
+    restart: always
+    container_name: dbReserva
+    environment:
+      POSTGRES_DB: reservadb
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - '5434:5432'
+    networks:
+      - netReservas
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U admin -d reservadb']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  sala:
+    restart: always
+    container_name: sala
+    build:
+      context: ./sala
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://dbSala:5432/saladb
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=admin
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.PostgreSQLDialect
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_SHOW_SQL=true
+      - SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL=true
+      - SERVER_PORT=8082
+    ports:
+      - '8085:8082'
+    depends_on:
+      - dbSala
+    networks:
+      - netSalas
+      - netApiGateway
+  dbSala:
+    image: postgres:latest
+    restart: always
+    container_name: dbSala
+    environment:
+      POSTGRES_DB: saladb
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - '5435:5432'
+    networks:
+      - netSalas
+
+  adminer:
+    container_name: adminerMicro
+    restart: always
+    image: adminer:latest
+    ports:
+      - '8089:8080'
+    networks:
+      - netUsuario
+      - netReservas
+      - netSalas
+
+  web:
+    image: nginx:latest
+    volumes:
+      - ./application/src:/usr/share/nginx/html
+    ports:
+      - '3000:80'
+    networks:
+      - netApiGateway
+
+  gateway:
+    restart: always
+    container_name: gateway
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    environment:
+      - SERVER_PORT=8080
+    ports:
+      - '8080:8080'
+    depends_on:
+      - usuario
+      - sala
+      - reserva
+    networks:
+      - netApiGateway
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    mem_limit: 512m
+    cpus: 0.5
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_VHOST: /
+    networks:
+      - netApiGateway
+      - netUsuario
+      - netReservas
+      - netSalas
+    healthcheck:
+      test: ['CMD', 'rabbitmqctl', 'status']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+networks:
+  netUsuario:
+    driver: bridge
+  netReservas:
+    driver: bridge
+  netSalas:
+    driver: bridge
+  netApiGateway:
+    driver: bridge

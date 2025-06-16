@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Listagem de Salas - Sistema de Reservas</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+        <style>
+            :root {
+                --primary-color: #2c3e50;
+                --secondary-color: #3498db;
+                --accent-color: #e74c3c;
+            }
+            
+            body {
+                background-color: #f8f9fa;
+                font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            }
+            
+            .navbar {
+                background-color: var(--primary-color);
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            
+            .navbar-brand {
+                color: white !important;
+                font-weight: 600;
+            }
+            
+            .nav-link {
+                color: rgba(255,255,255,0.8) !important;
+                transition: all 0.3s ease;
+            }
+            
+            .nav-link:hover {
+                color: white !important;
+                transform: translateY(-1px);
+            }
+            
+            .content-container {
+                background: white;
+                border-radius: 15px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                padding: 2rem;
+                margin-top: 2rem;
+            }
+            
+            .page-title {
+                color: var(--primary-color);
+                font-weight: 600;
+                margin-bottom: 1.5rem;
+                padding-bottom: 1rem;
+                border-bottom: 2px solid var(--secondary-color);
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            .table {
+                margin-bottom: 0;
+            }
+            
+            .table thead th {
+                background-color: var(--primary-color);
+                color: white;
+                font-weight: 500;
+                border: none;
+                padding: 1rem;
+            }
+            
+            .table tbody td {
+                padding: 1rem;
+                vertical-align: middle;
+            }
+            
+            .table tbody tr {
+                transition: all 0.3s ease;
+            }
+            
+            .table tbody tr:hover {
+                background-color: rgba(52, 152, 219, 0.1);
+            }
+            
+            .btn-action {
+                padding: 0.5rem;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+            }
+            
+            .btn-action:hover {
+                transform: translateY(-2px);
+            }
+            
+            .search-container {
+                margin-bottom: 1.5rem;
+            }
+            
+            .search-input {
+                border-radius: 8px;
+                padding: 0.75rem;
+                border: 1px solid #dee2e6;
+                transition: all 0.3s ease;
+            }
+            
+            .search-input:focus {
+                border-color: var(--secondary-color);
+                box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+            }
+            
+            .toast-container {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 1000;
+            }
+            
+            .loading-spinner {
+                display: none;
+                justify-content: center;
+                align-items: center;
+                padding: 2rem;
+            }
+            
+            .no-data {
+                text-align: center;
+                padding: 2rem;
+                color: #6c757d;
+            }
+
+            .capacity-badge {
+                background-color: var(--secondary-color);
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                font-weight: 500;
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">
+                    <i class="bi bi-calendar-check me-2"></i>
+                    Sistema de Reservas
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="form1.html">Cadastro de Usuário</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="form2.html">Cadastro de Sala</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="list2.html">Listagem de Salas</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div class="content-container">
+                <h2 class="page-title">
+                    <i class="bi bi-door-open me-2"></i>
+                    Listagem de Salas
+                </h2>
+                
+                <div class="search-container">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" class="form-control search-input border-start-0" id="searchInput" placeholder="Buscar salas...">
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Nome</th>
+                                <th scope="col">Capacidade</th>
+                                <th scope="col">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-salas">
+                            <!-- Dados das salas serão carregados aqui -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="loading-spinner" id="loadingSpinner">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Carregando...</span>
+                    </div>
+                </div>
+
+                <div class="no-data" id="noData" style="display: none;">
+                    <i class="bi bi-emoji-frown fs-1"></i>
+                    <p class="mt-3">Nenhuma sala encontrada</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="toast-container"></div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            function showToast(message, type = 'success') {
+                const toastContainer = document.querySelector('.toast-container');
+                const toast = document.createElement('div');
+                toast.className = `toast align-items-center text-white bg-${type} border-0`;
+                toast.setAttribute('role', 'alert');
+                toast.setAttribute('aria-live', 'assertive');
+                toast.setAttribute('aria-atomic', 'true');
+                
+                toast.innerHTML = `
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                `;
+                
+                toastContainer.appendChild(toast);
+                const bsToast = new bootstrap.Toast(toast);
+                bsToast.show();
+                
+                toast.addEventListener('hidden.bs.toast', () => {
+                    toast.remove();
+                });
+            }
+
+            function loadSalas(searchTerm = '') {
+                const loadingSpinner = document.getElementById('loadingSpinner');
+                const noData = document.getElementById('noData');
+                const tabela = document.getElementById('tabela-salas');
+                
+                loadingSpinner.style.display = 'flex';
+                tabela.innerHTML = '';
+                noData.style.display = 'none';
+
+                fetch("http://localhost:8080/salas")
+                    .then(response => response.json())
+                    .then(data => {
+                        loadingSpinner.style.display = 'none';
+                        
+                        const filteredData = data.filter(sala => 
+                            sala.nome.toLowerCase().includes(searchTerm.toLowerCase())
+                        );
+
+                        if (filteredData.length === 0) {
+                            noData.style.display = 'block';
+                            return;
+                        }
+
+                        filteredData.forEach(sala => {
+                            const row = document.createElement("tr");
+                            row.innerHTML = `
+                                <td>${sala.id}</td>
+                                <td>${sala.nome}</td>
+                                <td><span class="capacity-badge">${sala.capacidade} pessoas</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary btn-action me-1" onclick="editSala(${sala.id})">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger btn-action" onclick="deleteSala(${sala.id})">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            `;
+                            tabela.appendChild(row);
+                        });
+                    })
+                    .catch(error => {
+                        loadingSpinner.style.display = 'none';
+                        showToast('Erro ao carregar dados das salas', 'danger');
+                        console.error("Erro ao carregar dados:", error);
+                    });
+            }
+
+            function editSala(id) {
+                // Implementar edição
+                showToast('Funcionalidade de edição em desenvolvimento', 'info');
+            }
+
+            function deleteSala(id) {
+                if (confirm('Tem certeza que deseja excluir esta sala?')) {
+                    fetch(`http://localhost:8080/salas/${id}`, {
+                        method: 'DELETE'
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Erro ao excluir sala');
+                        showToast('Sala excluída com sucesso!');
+                        loadSalas(document.getElementById('searchInput').value);
+                    })
+                    .catch(error => {
+                        showToast('Erro ao excluir sala', 'danger');
+                        console.error("Erro ao excluir sala:", error);
+                    });
+                }
+            }
+
+            // Inicialização
+            document.addEventListener('DOMContentLoaded', () => {
+                loadSalas();
+                
+                // Implementar busca
+                const searchInput = document.getElementById('searchInput');
+                let searchTimeout;
+                
+                searchInput.addEventListener('input', (e) => {
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(() => {
+                        loadSalas(e.target.value);
+                    }, 300);
+                });
+            });
+        </script>
+    </body>
+</html>

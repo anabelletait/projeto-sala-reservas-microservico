@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Nova Reserva - Sistema de Reservas</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+        <style>
+            :root {
+                --primary-color: #2c3e50;
+                --secondary-color: #3498db;
+                --accent-color: #e74c3c;
+            }
+            
+            body {
+                background-color: #f8f9fa;
+                font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            }
+            
+            .navbar {
+                background-color: var(--primary-color);
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            
+            .navbar-brand {
+                color: white !important;
+                font-weight: 600;
+            }
+            
+            .nav-link {
+                color: rgba(255,255,255,0.8) !important;
+                transition: all 0.3s ease;
+            }
+            
+            .nav-link:hover {
+                color: white !important;
+                transform: translateY(-1px);
+            }
+            
+            .form-container {
+                background: white;
+                border-radius: 15px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                padding: 2rem;
+                margin-top: 2rem;
+            }
+            
+            .form-title {
+                color: var(--primary-color);
+                font-weight: 600;
+                margin-bottom: 1.5rem;
+                padding-bottom: 1rem;
+                border-bottom: 2px solid var(--secondary-color);
+            }
+            
+            .form-label {
+                font-weight: 500;
+                color: var(--primary-color);
+            }
+            
+            .form-control {
+                border-radius: 8px;
+                border: 1px solid #dee2e6;
+                padding: 0.75rem;
+                transition: all 0.3s ease;
+            }
+            
+            .form-control:focus {
+                border-color: var(--secondary-color);
+                box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+            }
+            
+            .btn-primary {
+                background-color: var(--secondary-color);
+                border: none;
+                padding: 0.75rem 2rem;
+                font-weight: 500;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+            }
+            
+            .btn-primary:hover {
+                background-color: #2980b9;
+                transform: translateY(-2px);
+            }
+            
+            .form-section {
+                margin-bottom: 2rem;
+                padding: 1.5rem;
+                background-color: #f8f9fa;
+                border-radius: 10px;
+            }
+            
+            .form-section-title {
+                color: var(--primary-color);
+                font-size: 1.2rem;
+                margin-bottom: 1rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            .toast-container {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 1000;
+            }
+
+            .select2-container {
+                width: 100% !important;
+            }
+
+            .select2-container .select2-selection--single {
+                height: 45px;
+                border: 1px solid #dee2e6;
+                border-radius: 8px;
+            }
+
+            .select2-container--default .select2-selection--single .select2-selection__rendered {
+                line-height: 45px;
+                padding-left: 15px;
+            }
+
+            .select2-container--default .select2-selection--single .select2-selection__arrow {
+                height: 43px;
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">
+                    <i class="bi bi-calendar-check me-2"></i>
+                    Sistema de Reservas
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="form1.html">Cadastro de Usuário</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="form2.html">Cadastro de Sala</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="form3.html">Nova Reserva</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="list3.html">Listagem de Reservas</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div class="form-container">
+                <h2 class="form-title">
+                    <i class="bi bi-calendar-plus me-2"></i>
+                    Nova Reserva
+                </h2>
+                <form id="form3">
+                    <div class="form-section">
+                        <h3 class="form-section-title">
+                            <i class="bi bi-clock"></i>
+                            Data e Hora
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="dataHora" class="form-label">Data e Hora da Reserva</label>
+                                <input type="datetime-local" class="form-control" id="dataHora" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="form-section-title">
+                            <i class="bi bi-door-open"></i>
+                            Sala
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="salaId" class="form-label">Selecione a Sala</label>
+                                <select class="form-select" id="salaId" required>
+                                    <option value="">Selecione uma sala...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="form-section-title">
+                            <i class="bi bi-person"></i>
+                            Usuário
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="usuarioId" class="form-label">Selecione o Usuário</label>
+                                <select class="form-select" id="usuarioId" required>
+                                    <option value="">Selecione um usuário...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-2"></i>
+                            Criar Reserva
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="toast-container"></div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            function showToast(message, type = 'success') {
+                const toastContainer = document.querySelector('.toast-container');
+                const toast = document.createElement('div');
+                toast.className = `toast align-items-center text-white bg-${type} border-0`;
+                toast.setAttribute('role', 'alert');
+                toast.setAttribute('aria-live', 'assertive');
+                toast.setAttribute('aria-atomic', 'true');
+                
+                toast.innerHTML = `
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                `;
+                
+                toastContainer.appendChild(toast);
+                const bsToast = new bootstrap.Toast(toast);
+                bsToast.show();
+                
+                toast.addEventListener('hidden.bs.toast', () => {
+                    toast.remove();
+                });
+            }
+
+            // Carregar salas
+            function loadSalas() {
+                fetch("http://localhost:8080/salas")
+                    .then(response => response.json())
+                    .then(data => {
+                        const salaSelect = document.getElementById('salaId');
+                        data.forEach(sala => {
+                            const option = document.createElement('option');
+                            option.value = sala.id;
+                            option.textContent = `${sala.nome} (${sala.capacidade} pessoas)`;
+                            salaSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        showToast('Erro ao carregar salas', 'danger');
+                        console.error("Erro ao carregar salas:", error);
+                    });
+            }
+
+            // Carregar usuários
+            function loadUsuarios() {
+                fetch("http://localhost:8080/usuarios")
+                    .then(response => response.json())
+                    .then(data => {
+                        const usuarioSelect = document.getElementById('usuarioId');
+                        data.forEach(usuario => {
+                            const option = document.createElement('option');
+                            option.value = usuario.id;
+                            option.textContent = `${usuario.nome} (${usuario.email})`;
+                            usuarioSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        showToast('Erro ao carregar usuários', 'danger');
+                        console.error("Erro ao carregar usuários:", error);
+                    });
+            }
+
+            document.getElementById("form3").addEventListener("submit", function(event) {
+                event.preventDefault();
+
+                const dataHora = document.getElementById("dataHora").value;
+                const salaId = document.getElementById("salaId").value;
+                const usuarioId = document.getElementById("usuarioId").value;
+
+                const url = `http://localhost:8080/reservas/criar-via-mensageria?usuarioId=${usuarioId}&salaId=${salaId}`;
+
+                fetch(url, {
+                    method: "POST"
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            throw new Error(text);
+                        });
+                    }
+                    return response;
+                })
+                .then(() => {
+                    showToast('Reserva criada com sucesso!');
+                    this.reset();
+                })
+                .catch(error => {
+                    showToast(`Erro ao criar reserva: ${error.message}`, 'danger');
+                    console.error("Erro ao criar reserva:", error);
+                });
+            });
+
+            // Inicialização
+            document.addEventListener('DOMContentLoaded', () => {
+                loadSalas();
+                loadUsuarios();
+            });
+        </script>
+    </body>
+</html>
