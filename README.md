@@ -192,8 +192,8 @@ O projeto segue os princípios do Domain-Driven Design (DDD), com uma estrutura 
 
 1. Clone o repositório:
    ```bash
-   git clone [URL_DO_REPOSITÓRIO]
-   cd microservicos-reservas-salas
+   git clone https://github.com/anabelletait/projeto-sala-reservas-microservico
+   cd projeto-sala-reservas-microservico
    ```
 
 2. Inicie o Docker Desktop e aguarde até que esteja completamente carregado
